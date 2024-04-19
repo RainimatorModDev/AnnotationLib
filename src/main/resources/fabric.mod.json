@@ -19,7 +19,7 @@
       "com.iafenvoy.annotationlib.AnnotationLib"
     ],
     "annotation_lib": [
-      "com.iafenvoy.annotationlib.test.TestItem"
+      "com.iafenvoy.annotationlib.test.TestRegistry"
     ]
   },
   "mixins": [

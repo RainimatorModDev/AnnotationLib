@@ -1,11 +1,13 @@
 package com.iafenvoy.annotationlib.registry;
 
 import com.iafenvoy.annotationlib.AnnotationLib;
+import com.iafenvoy.annotationlib.annotation.Link;
 import com.iafenvoy.annotationlib.annotation.ModId;
 import com.iafenvoy.annotationlib.annotation.ObjectReg;
 import com.iafenvoy.annotationlib.annotation.RegisterAll;
 import com.iafenvoy.annotationlib.api.IAnnotationLibEntryPoint;
 import net.fabricmc.loader.api.FabricLoader;
+import net.minecraft.block.Block;
 import net.minecraft.item.Item;
 import net.minecraft.registry.Registries;
 import net.minecraft.registry.Registry;
@@ -15,12 +17,12 @@ import java.lang.reflect.Field;
 import java.lang.reflect.Modifier;
 import java.util.List;
 
-public class RegistryManager {
-    private static <T> void register(Registry<T> registry, String modId, String name, T obj) {
+public class RegistrationManager {
+    public static <T> void register(Registry<T> registry, String modId, String name, T obj) {
         register(registry, new Identifier(modId, name), obj);
     }
 
-    private static <T> void register(Registry<T> registry, Identifier id, T obj) {
+    public static <T> void register(Registry<T> registry, Identifier id, T obj) {
         Registry.register(registry, id, obj);
     }
 
@@ -34,15 +36,26 @@ public class RegistryManager {
         return name.toLowerCase();
     }
 
+    private static boolean tryPutLink(Field field) {
+        Link link = field.getAnnotation(Link.class);
+        if (link == null) return false;
+        RegistrationLink.link(link.type(), link.target(), field);
+        return true;
+    }
+
     public static void register(Class<?> clazz) {
         ModId modIdAnnotation = clazz.getAnnotation(ModId.class);
         if (modIdAnnotation != null) {//Has @ModId
+            boolean linkableChanged = false;
             String modId = modIdAnnotation.value();
             Field[] fields = clazz.getDeclaredFields();
             boolean autoRegister = clazz.getAnnotation(RegisterAll.class) != null;
             for (Field field : fields) {
-                if (!Modifier.isStatic(field.getModifiers()) || !Modifier.isPublic(field.getModifiers()))
-                    continue;//Ignore non-static field
+                int modifier = field.getModifiers();
+                if (!Modifier.isStatic(modifier))//Ignore non-static field
+                    continue;
+                //@Link
+                if (tryPutLink(field)) continue;
                 String name = getName(field, autoRegister);
                 if (name == null) {
                     AnnotationLib.LOGGER.warn(String.format("Field %s in class %s is not marked as requiring registration, game may crash with this.", field.getName(), clazz.getName()));
@@ -52,10 +65,17 @@ public class RegistryManager {
                     Object obj = field.get(null);
                     if (Item.class.isAssignableFrom(field.getType()))
                         register(Registries.ITEM, modId, name, (Item) obj);
+                    if (Block.class.isAssignableFrom(field.getType())) {
+                        linkableChanged = true;
+                        register(Registries.BLOCK, modId, name, (Block) obj);
+                    }
                 } catch (IllegalAccessException e) {
                     e.printStackTrace();
                 }
             }
+            //After we complete all register, check non-linked objects
+            if (linkableChanged)
+                RegistrationLink.findIfCanLink();
         }
     }
 

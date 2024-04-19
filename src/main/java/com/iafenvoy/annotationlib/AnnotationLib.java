@@ -1,6 +1,6 @@
 package com.iafenvoy.annotationlib;
 
-import com.iafenvoy.annotationlib.registry.RegistryManager;
+import com.iafenvoy.annotationlib.registry.RegistrationManager;
 import com.mojang.logging.LogUtils;
 import net.fabricmc.api.ModInitializer;
 import org.slf4j.Logger;
@@ -11,6 +11,6 @@ public class AnnotationLib implements ModInitializer {
 
     @Override
     public void onInitialize() {
-        RegistryManager.registerDefault();
+        RegistrationManager.registerDefault();
     }
 }

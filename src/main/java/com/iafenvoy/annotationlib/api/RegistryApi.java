@@ -1,10 +1,10 @@
 package com.iafenvoy.annotationlib.api;
 
 import com.iafenvoy.annotationlib.annotation.ModId;
-import com.iafenvoy.annotationlib.registry.RegistryManager;
+import com.iafenvoy.annotationlib.registry.RegistrationManager;
 
 /**
- * <p>Provide API to internal register system.</p>
+ * <p>Provide API to internal registration system.</p>
  *
  * @author IAFEnvoy
  * @version 1.0
@@ -17,7 +17,8 @@ public class RegistryApi {
      *
      * @param clazz Class want to be registered. It must have {@link ModId} Annotation
      */
+    @SuppressWarnings("unused")
     public static void register(Class<?> clazz) {
-        RegistryManager.register(clazz);
+        RegistrationManager.register(clazz);
     }
 }
