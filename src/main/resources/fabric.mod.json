@@ -1,0 +1,33 @@
+{
+  "schemaVersion": 1,
+  "id": "annotation_lib",
+  "version": "1.0",
+  "name": "AnnotationLib",
+  "description": "",
+  "authors": [],
+  "contact": {
+    "repo": "https://github.com/IAFEnvoy/AnnotationLib"
+  },
+  "license": "LGPL-3.0",
+  "icon": "assets/annotationlib/icon.png",
+  "environment": "*",
+  "entrypoints": {
+    "client": [
+      "com.iafenvoy.annotationlib.client.AnnotationLibClient"
+    ],
+    "main": [
+      "com.iafenvoy.annotationlib.AnnotationLib"
+    ],
+    "annotation_lib": [
+      "com.iafenvoy.annotationlib.test.TestItem"
+    ]
+  },
+  "mixins": [
+    "annotation_lib.mixins.json"
+  ],
+  "depends": {
+    "fabricloader": ">=0.15.0",
+    "fabric": "*",
+    "minecraft": "1.20.1"
+  }
+}
