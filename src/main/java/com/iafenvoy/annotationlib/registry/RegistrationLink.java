@@ -84,7 +84,7 @@ public class RegistrationLink {
                     RegistrationManager.register(Registries.ITEM, target, (Item) obj);
                 this.field.set(null, obj);
             } catch (IllegalAccessException e) {
-                e.printStackTrace();
+                AnnotationLib.LOGGER.error("Fail to set object: " + field.getName(), e);
             }
             this.linked = true;
         }

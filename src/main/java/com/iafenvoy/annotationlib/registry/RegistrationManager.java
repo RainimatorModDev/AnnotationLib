@@ -1,19 +1,22 @@
 package com.iafenvoy.annotationlib.registry;
 
 import com.iafenvoy.annotationlib.AnnotationLib;
-import com.iafenvoy.annotationlib.annotation.Link;
-import com.iafenvoy.annotationlib.annotation.ModId;
-import com.iafenvoy.annotationlib.annotation.ObjectReg;
-import com.iafenvoy.annotationlib.annotation.RegisterAll;
+import com.iafenvoy.annotationlib.annotation.*;
 import com.iafenvoy.annotationlib.api.IAnnotationLibEntryPoint;
 import net.fabricmc.loader.api.FabricLoader;
 import net.minecraft.block.Block;
+import net.minecraft.entity.EntityType;
+import net.minecraft.entity.effect.StatusEffect;
 import net.minecraft.item.Item;
+import net.minecraft.item.ItemGroup;
 import net.minecraft.registry.Registries;
 import net.minecraft.registry.Registry;
+import net.minecraft.sound.SoundEvent;
 import net.minecraft.util.Identifier;
 
 import java.lang.reflect.Field;
+import java.lang.reflect.InvocationTargetException;
+import java.lang.reflect.Method;
 import java.lang.reflect.Modifier;
 import java.util.List;
 
@@ -36,6 +39,12 @@ public class RegistrationManager {
         return name.toLowerCase();
     }
 
+    private static void tryPutGroup(Field field) {
+        Group group = field.getAnnotation(Group.class);
+        if (group == null) return;
+        RegistrationGroup.add(group.value(), field);
+    }
+
     private static boolean tryPutLink(Field field) {
         Link link = field.getAnnotation(Link.class);
         if (link == null) return false;
@@ -54,6 +63,8 @@ public class RegistrationManager {
                 int modifier = field.getModifiers();
                 if (!Modifier.isStatic(modifier))//Ignore non-static field
                     continue;
+                //@Group
+                tryPutGroup(field);
                 //@Link
                 if (tryPutLink(field)) continue;
                 String name = getName(field, autoRegister);
@@ -69,13 +80,38 @@ public class RegistrationManager {
                         linkableChanged = true;
                         register(Registries.BLOCK, modId, name, (Block) obj);
                     }
+                    if (EntityType.class.isAssignableFrom(field.getType())) {
+                        register(Registries.ENTITY_TYPE, modId, name, (EntityType<?>) obj);
+                        RegistrationHelper.processEntity(clazz, field, obj);
+                    }
+                    if (SoundEvent.class.isAssignableFrom(field.getType()))
+                        register(Registries.SOUND_EVENT, modId, name, (SoundEvent) obj);
+                    if (StatusEffect.class.isAssignableFrom(field.getType()))
+                        register(Registries.STATUS_EFFECT, modId, name, (StatusEffect) obj);
+                    if (ItemGroup.class.isAssignableFrom(field.getType()))
+                        register(Registries.ITEM_GROUP, modId, name, (ItemGroup) obj);
                 } catch (IllegalAccessException e) {
-                    e.printStackTrace();
+                    AnnotationLib.LOGGER.error("Fail to get object: " + field.getName(), e);
                 }
             }
             //After we complete all register, check non-linked objects
             if (linkableChanged)
                 RegistrationLink.findIfCanLink();
+            //find @CallbackHandler
+            for (Method method : clazz.getMethods()) {
+                CallbackHandler callback = method.getAnnotation(CallbackHandler.class);
+                if (Modifier.isStatic(method.getModifiers()) && callback != null)
+                    if (method.getParameterCount() == 0 && method.getReturnType() == Void.TYPE) {
+                        if (Modifier.isPrivate(method.getModifiers()))
+                            method.setAccessible(true);
+                        try {
+                            method.invoke(null);
+                        } catch (InvocationTargetException | IllegalAccessException e) {
+                            AnnotationLib.LOGGER.error("Fail to invoke method: " + method.getName(), e);
+                        }
+                    } else
+                        AnnotationLib.LOGGER.warn(String.format("Method %s in class %s has a wrong signature, see @CallbackHandler for more info.", method.getName(), clazz.getName()));
+            }
         }
     }
 

@@ -4,6 +4,7 @@
   "package": "com.iafenvoy.annotationlib.mixin",
   "compatibilityLevel": "JAVA_17",
   "mixins": [
+    "ItemGroupMixin",
     "RegistriesMixin"
   ],
   "client": [
