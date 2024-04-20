@@ -116,7 +116,7 @@ public class RegistrationManager {
     }
 
     public static void registerDefault() {
-        AnnotationLib.LOGGER.info("Start to run annotation powered tasks");
+        AnnotationLib.LOGGER.info("Start to run annotation powered registrations.");
         List<IAnnotationLibEntryPoint> entrypoints = FabricLoader.getInstance().getEntrypoints(AnnotationLib.MOD_ID, IAnnotationLibEntryPoint.class);
         for (IAnnotationLibEntryPoint entrypoint : entrypoints)
             register(entrypoint.getClass());

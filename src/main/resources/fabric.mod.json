@@ -3,18 +3,17 @@
   "id": "annotation_lib",
   "version": "1.0",
   "name": "AnnotationLib",
-  "description": "",
-  "authors": [],
+  "description": "The magic of annotations :)",
+  "authors": [
+    "IAFEnvoy"
+  ],
   "contact": {
     "repo": "https://github.com/IAFEnvoy/AnnotationLib"
   },
   "license": "LGPL-3.0",
-  "icon": "assets/annotationlib/icon.png",
+  "icon": "icon.png",
   "environment": "*",
   "entrypoints": {
-    "client": [
-      "com.iafenvoy.annotationlib.client.AnnotationLibClient"
-    ],
     "main": [
       "com.iafenvoy.annotationlib.AnnotationLib"
     ]

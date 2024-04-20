@@ -1,0 +1,7 @@
+com.iafenvoy.annotationlib
+com.iafenvoy.annotationlib.annotation
+com.iafenvoy.annotationlib.api
+com.iafenvoy.annotationlib.mixin
+com.iafenvoy.annotationlib.registry
+com.iafenvoy.annotationlib.test
+com.iafenvoy.annotationlib.util
