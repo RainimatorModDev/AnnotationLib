@@ -27,7 +27,14 @@ public @interface Link {
      * @return {@link String }
      * @see Identifier
      */
-    String target();
+    TargetId target() default @TargetId(value = "");
+
+    /**
+     * The target objects ID.
+     *
+     * @return {@link TargetId[] }
+     */
+    TargetId[] targets() default {};
 
     /**
      * <p>The object type you want to link.</p>

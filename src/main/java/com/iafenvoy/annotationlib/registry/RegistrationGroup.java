@@ -6,6 +6,7 @@ import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
 import net.minecraft.util.Identifier;
 
+import java.lang.annotation.Target;
 import java.lang.reflect.Field;
 import java.util.ArrayList;
 import java.util.Collection;
@@ -14,8 +15,8 @@ import java.util.List;
 public class RegistrationGroup {
     private static final List<Pair<Identifier, Field>> NEED_TO_ADD = new ArrayList<>();
 
-    public static void add(String id, Field field) {
-        NEED_TO_ADD.add(Pair.of(new Identifier(id), field));
+    public static void add(Identifier id, Field field) {
+        NEED_TO_ADD.add(Pair.of(id, field));
     }
 
     public static void postItem(Identifier group, Collection<ItemStack> itemCollection) {

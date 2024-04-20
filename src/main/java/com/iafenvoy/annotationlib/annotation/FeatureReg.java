@@ -1,7 +1,5 @@
 package com.iafenvoy.annotationlib.annotation;
 
-import net.minecraft.registry.Registry;
-
 import java.lang.annotation.*;
 
 /**

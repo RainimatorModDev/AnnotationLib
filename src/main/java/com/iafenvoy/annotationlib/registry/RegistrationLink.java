@@ -1,17 +1,20 @@
 package com.iafenvoy.annotationlib.registry;
 
 import com.iafenvoy.annotationlib.AnnotationLib;
+import com.iafenvoy.annotationlib.annotation.TargetId;
 import com.iafenvoy.annotationlib.util.TargetType;
 import net.fabricmc.fabric.api.item.v1.FabricItemSettings;
 import net.minecraft.block.Block;
 import net.minecraft.block.Blocks;
 import net.minecraft.item.BlockItem;
 import net.minecraft.item.Item;
+import net.minecraft.item.SkullItem;
 import net.minecraft.registry.Registries;
 import net.minecraft.util.Identifier;
 
 import java.lang.reflect.Field;
 import java.lang.reflect.Modifier;
+import java.util.List;
 import java.util.concurrent.CopyOnWriteArrayList;
 
 public class RegistrationLink {
@@ -20,7 +23,7 @@ public class RegistrationLink {
     private static void tryLink(Linkable linkable) {
         switch (linkable.type) {
             case BLOCK -> {
-                Block wantToLink = Registries.BLOCK.get(linkable.target);
+                Block wantToLink = Registries.BLOCK.get(linkable.target.get(0));
                 if (wantToLink == Blocks.AIR) {//cannot find or haven't registered yet.
                     NEED_TO_LINK.add(linkable);
                     return;
@@ -28,14 +31,24 @@ public class RegistrationLink {
                 linkable.link(new BlockItem(wantToLink, new FabricItemSettings()));
                 return;
             }
+            case SKULL -> {
+                Block wantToLink1 = Registries.BLOCK.get(linkable.target.get(0));
+                Block wantToLink2 = Registries.BLOCK.get(linkable.target.get(1));
+                if (wantToLink1 == Blocks.AIR || wantToLink2 == Blocks.AIR) {//cannot find or haven't registered yet.
+                    NEED_TO_LINK.add(linkable);
+                    return;
+                }
+                linkable.link(new SkullItem(wantToLink1, wantToLink2, new FabricItemSettings()));
+            }
             default -> {
             }
         }
         throw new UnsupportedOperationException(linkable.type + " is not implement yet.");
     }
 
-    public static void link(TargetType type, String target, Field field) {
-        tryLink(new Linkable(type, new Identifier(target), field));
+    public static void link(String modId, TargetType type, List<TargetId> target, Field field) {
+        List<Identifier> ids = target.stream().map(x -> new Identifier(x.namespace().isBlank() ? modId : x.namespace(), x.value())).toList();
+        tryLink(new Linkable(type, ids, field));
     }
 
     public static void findIfCanLink() {
@@ -57,11 +70,11 @@ public class RegistrationLink {
 
     private static class Linkable {
         private final TargetType type;
-        private final Identifier target;
+        private final List<Identifier> target;
         private final Field field;
         private boolean linked = false;
 
-        public Linkable(TargetType type, Identifier target, Field field) {
+        public Linkable(TargetType type, List<Identifier> target, Field field) {
             this.type = type;
             this.target = target;
             this.field = field;
@@ -81,7 +94,7 @@ public class RegistrationLink {
                 this.field.setAccessible(true);
             try {
                 if (Item.class.isAssignableFrom(this.field.getType()))
-                    RegistrationManager.register(Registries.ITEM, target, (Item) obj);
+                    RegistrationManager.register(Registries.ITEM, target.get(0), (Item) obj);
                 this.field.set(null, obj);
             } catch (IllegalAccessException e) {
                 AnnotationLib.LOGGER.error("Fail to set object: " + field.getName(), e);

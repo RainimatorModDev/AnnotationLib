@@ -48,12 +48,12 @@ public class TestRegistry implements IAnnotationLibEntryPoint {
     public static final Block TEST_BLOCK = new Block(AbstractBlock.Settings.create());
 
     //Success and link to the block above
-    @Group("building_blocks")//Put into creative inventory
-    @Link(type = TargetType.BLOCK, target = AnnotationLib.MOD_ID + ":test_block")//BlockItem
+    @Group(@TargetId(namespace = "minecraft", value = "building_blocks"))//Put into an inventory
+    @Link(type = TargetType.BLOCK, targets = {@TargetId(namespace = AnnotationLib.MOD_ID, value = "test_block")})
     public static Item TEST_BLOCK_ITEM = null;
 
     //This will print a warning
-    @Link(type = TargetType.BLOCK, target = "not_existed")
+    @Link(type = TargetType.BLOCK, target = @TargetId("not_existed"))
     public static Item UNUSED_LINK_ITEM = null;
 
     //Success
@@ -61,7 +61,7 @@ public class TestRegistry implements IAnnotationLibEntryPoint {
     public static final EntityType<MyEntity> TEST_ENTITY_TYPE = EntityHelper.build(MyEntity::new, SpawnGroup.MONSTER, 64, 3, true, 0.6F, 1.8F);
 
     //Also can be used to register SoundEvent, StatusEffect, ItemGroup
-    
+
     //This method will be called after register
     @CallbackHandler
     public static void callback() {

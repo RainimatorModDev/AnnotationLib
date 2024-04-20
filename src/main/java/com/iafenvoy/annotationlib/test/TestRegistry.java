@@ -24,11 +24,11 @@ public class TestRegistry implements IAnnotationLibEntryPoint {
     @ObjectReg
     public static final Block TEST_BLOCK = new Block(AbstractBlock.Settings.create());
     //Success and link to the block above
-    @Group("building_blocks")
-    @Link(type = TargetType.BLOCK, target = AnnotationLib.MOD_ID + ":test_block")
+    @Group(@TargetId(namespace = "minecraft", value = "building_blocks"))
+    @Link(type = TargetType.BLOCK, targets = {@TargetId(namespace = AnnotationLib.MOD_ID, value = "test_block")})
     public static Item TEST_BLOCK_ITEM = null;
     //This will print a warning
-    @Link(type = TargetType.BLOCK, target = "not_existed")
+    @Link(type = TargetType.BLOCK, target = @TargetId("not_existed"))
     public static Item UNUSED_LINK_ITEM = null;
     //Success
     @ObjectReg

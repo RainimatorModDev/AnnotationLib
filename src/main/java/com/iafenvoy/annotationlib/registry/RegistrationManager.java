@@ -39,16 +39,18 @@ public class RegistrationManager {
         return name.toLowerCase();
     }
 
-    private static void tryPutGroup(Field field) {
+    private static void tryPutGroup(String modId, Field field) {
         Group group = field.getAnnotation(Group.class);
         if (group == null) return;
-        RegistrationGroup.add(group.value(), field);
+        TargetId targetId = group.value();
+        RegistrationGroup.add(new Identifier(targetId.namespace().isBlank() ? modId : targetId.namespace(), targetId.value()), field);
     }
 
-    private static boolean tryPutLink(Field field) {
+    private static boolean tryPutLink(String modId, Field field) {
         Link link = field.getAnnotation(Link.class);
         if (link == null) return false;
-        RegistrationLink.link(link.type(), link.target(), field);
+        List<TargetId> targets = link.target().value().isBlank() ? List.of(link.targets()) : List.of(link.target());
+        RegistrationLink.link(modId, link.type(), targets, field);
         return true;
     }
 
@@ -64,9 +66,9 @@ public class RegistrationManager {
                 if (!Modifier.isStatic(modifier))//Ignore non-static field
                     continue;
                 //@Group
-                tryPutGroup(field);
+                tryPutGroup(modId, field);
                 //@Link
-                if (tryPutLink(field)) continue;
+                if (tryPutLink(modId, field)) continue;
                 String name = getName(field, autoRegister);
                 if (name == null) {
                     AnnotationLib.LOGGER.warn(String.format("Field %s in class %s is not marked as requiring registration, game may crash with this.", field.getName(), clazz.getName()));

@@ -21,5 +21,5 @@ public @interface Group {
      * @return {@link String }
      * @see Identifier
      */
-    String value();
+    TargetId value();
 }

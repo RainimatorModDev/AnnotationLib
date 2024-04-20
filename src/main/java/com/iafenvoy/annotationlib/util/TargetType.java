@@ -2,6 +2,7 @@ package com.iafenvoy.annotationlib.util;
 
 import com.iafenvoy.annotationlib.annotation.Link;
 import net.minecraft.block.Block;
+import net.minecraft.block.SkullBlock;
 
 
 /**
@@ -14,7 +15,11 @@ import net.minecraft.block.Block;
  */
 public enum TargetType {
     /**
-     * Link to a {@link Block}
+     * Link to a {@link Block} and need 1 target
      */
-    BLOCK
+    BLOCK,
+    /**
+     * Link to a {@link SkullBlock} and need 2 targets
+     */
+    SKULL
 }
