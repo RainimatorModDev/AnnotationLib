@@ -1,7 +1,10 @@
 com.iafenvoy.annotationlib
 com.iafenvoy.annotationlib.annotation
+com.iafenvoy.annotationlib.annotation.network
+com.iafenvoy.annotationlib.annotation.registration
 com.iafenvoy.annotationlib.api
 com.iafenvoy.annotationlib.mixin
+com.iafenvoy.annotationlib.network
 com.iafenvoy.annotationlib.registry
 com.iafenvoy.annotationlib.test
 com.iafenvoy.annotationlib.util

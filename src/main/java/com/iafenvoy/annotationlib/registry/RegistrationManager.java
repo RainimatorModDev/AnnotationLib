@@ -2,8 +2,7 @@ package com.iafenvoy.annotationlib.registry;
 
 import com.iafenvoy.annotationlib.AnnotationLib;
 import com.iafenvoy.annotationlib.annotation.*;
-import com.iafenvoy.annotationlib.api.IAnnotationLibEntryPoint;
-import net.fabricmc.loader.api.FabricLoader;
+import com.iafenvoy.annotationlib.annotation.registration.*;
 import net.minecraft.block.Block;
 import net.minecraft.entity.EntityType;
 import net.minecraft.entity.effect.StatusEffect;
@@ -32,17 +31,21 @@ public class RegistrationManager {
     //return null if there is no need to register
     private static String getName(Field field, boolean autoRegister) {
         ObjectReg objectReg = field.getAnnotation(ObjectReg.class);
-        if (!autoRegister && objectReg == null) return null;
+        ItemReg itemReg = field.getAnnotation(ItemReg.class);
+        if (!autoRegister && objectReg == null && itemReg == null) return null;
         String name = field.getName();
         if (objectReg != null && !objectReg.value().isBlank())
             name = objectReg.value();
+        if (itemReg != null && !itemReg.value().isBlank())
+            name = itemReg.value();
         return name.toLowerCase();
     }
 
     private static void tryPutGroup(String modId, Field field) {
         Group group = field.getAnnotation(Group.class);
-        if (group == null) return;
-        TargetId targetId = group.value();
+        ItemReg itemReg = field.getAnnotation(ItemReg.class);
+        if (group == null && itemReg == null) return;
+        TargetId targetId = group == null ? itemReg.group() : group.value();
         RegistrationGroup.add(new Identifier(targetId.namespace().isBlank() ? modId : targetId.namespace(), targetId.value()), field);
     }
 
@@ -78,20 +81,20 @@ public class RegistrationManager {
                     Object obj = field.get(null);
                     if (Item.class.isAssignableFrom(field.getType()))
                         register(Registries.ITEM, modId, name, (Item) obj);
-                    if (Block.class.isAssignableFrom(field.getType())) {
+                    else if (Block.class.isAssignableFrom(field.getType())) {
                         linkableChanged = true;
                         register(Registries.BLOCK, modId, name, (Block) obj);
-                    }
-                    if (EntityType.class.isAssignableFrom(field.getType())) {
+                    } else if (EntityType.class.isAssignableFrom(field.getType())) {
                         register(Registries.ENTITY_TYPE, modId, name, (EntityType<?>) obj);
                         RegistrationHelper.processEntity(clazz, field, obj);
-                    }
-                    if (SoundEvent.class.isAssignableFrom(field.getType()))
+                    } else if (SoundEvent.class.isAssignableFrom(field.getType()))
                         register(Registries.SOUND_EVENT, modId, name, (SoundEvent) obj);
-                    if (StatusEffect.class.isAssignableFrom(field.getType()))
+                    else if (StatusEffect.class.isAssignableFrom(field.getType()))
                         register(Registries.STATUS_EFFECT, modId, name, (StatusEffect) obj);
-                    if (ItemGroup.class.isAssignableFrom(field.getType()))
+                    else if (ItemGroup.class.isAssignableFrom(field.getType()))
                         register(Registries.ITEM_GROUP, modId, name, (ItemGroup) obj);
+                    else
+                        AnnotationLib.LOGGER.error("Cannot register this item since this type is not implemented yet: " + field.getName());
                 } catch (IllegalAccessException e) {
                     AnnotationLib.LOGGER.error("Fail to get object: " + field.getName(), e);
                 }
@@ -115,12 +118,5 @@ public class RegistrationManager {
                         AnnotationLib.LOGGER.warn(String.format("Method %s in class %s has a wrong signature, see @CallbackHandler for more info.", method.getName(), clazz.getName()));
             }
         }
-    }
-
-    public static void registerDefault() {
-        AnnotationLib.LOGGER.info("Start to run annotation powered registrations.");
-        List<IAnnotationLibEntryPoint> entrypoints = FabricLoader.getInstance().getEntrypoints(AnnotationLib.MOD_ID, IAnnotationLibEntryPoint.class);
-        for (IAnnotationLibEntryPoint entrypoint : entrypoints)
-            register(entrypoint.getClass());
     }
 }

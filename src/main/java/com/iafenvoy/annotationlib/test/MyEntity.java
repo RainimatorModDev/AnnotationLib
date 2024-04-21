@@ -1,6 +1,6 @@
 package com.iafenvoy.annotationlib.test;
 
-import com.iafenvoy.annotationlib.annotation.AttributeBuilder;
+import com.iafenvoy.annotationlib.annotation.registration.AttributeBuilder;
 import net.minecraft.entity.EntityType;
 import net.minecraft.entity.LivingEntity;
 import net.minecraft.entity.ai.RangedAttackMob;

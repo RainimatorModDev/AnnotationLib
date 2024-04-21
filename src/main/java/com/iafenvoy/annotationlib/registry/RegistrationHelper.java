@@ -1,8 +1,8 @@
 package com.iafenvoy.annotationlib.registry;
 
 import com.iafenvoy.annotationlib.AnnotationLib;
-import com.iafenvoy.annotationlib.annotation.AttributeBuilder;
-import com.iafenvoy.annotationlib.annotation.ParticleProvider;
+import com.iafenvoy.annotationlib.annotation.registration.AttributeBuilder;
+import com.iafenvoy.annotationlib.annotation.registration.ParticleProvider;
 import io.netty.util.internal.UnstableApi;
 import net.fabricmc.fabric.api.client.particle.v1.ParticleFactoryRegistry;
 import net.fabricmc.fabric.api.object.builder.v1.entity.FabricDefaultAttributeRegistry;

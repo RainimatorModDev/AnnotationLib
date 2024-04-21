@@ -1,6 +1,6 @@
 package com.iafenvoy.annotationlib.util;
 
-import com.iafenvoy.annotationlib.annotation.Link;
+import com.iafenvoy.annotationlib.annotation.registration.Link;
 import net.minecraft.block.Block;
 import net.minecraft.block.SkullBlock;
 

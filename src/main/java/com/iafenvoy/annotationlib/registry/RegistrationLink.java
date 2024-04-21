@@ -24,26 +24,21 @@ public class RegistrationLink {
         switch (linkable.type) {
             case BLOCK -> {
                 Block wantToLink = Registries.BLOCK.get(linkable.target.get(0));
-                if (wantToLink == Blocks.AIR) {//cannot find or haven't registered yet.
+                if (wantToLink == Blocks.AIR) //cannot find or haven't registered yet.
                     NEED_TO_LINK.add(linkable);
-                    return;
-                }
-                linkable.link(new BlockItem(wantToLink, new FabricItemSettings()));
-                return;
+                else
+                    linkable.link(new BlockItem(wantToLink, new FabricItemSettings()));
             }
             case SKULL -> {
                 Block wantToLink1 = Registries.BLOCK.get(linkable.target.get(0));
                 Block wantToLink2 = Registries.BLOCK.get(linkable.target.get(1));
-                if (wantToLink1 == Blocks.AIR || wantToLink2 == Blocks.AIR) {//cannot find or haven't registered yet.
+                if (wantToLink1 == Blocks.AIR || wantToLink2 == Blocks.AIR) //cannot find or haven't registered yet.
                     NEED_TO_LINK.add(linkable);
-                    return;
-                }
-                linkable.link(new SkullItem(wantToLink1, wantToLink2, new FabricItemSettings()));
+                else
+                    linkable.link(new SkullItem(wantToLink1, wantToLink2, new FabricItemSettings()));
             }
-            default -> {
-            }
+            default -> throw new UnsupportedOperationException(linkable.type + " is not implement yet.");
         }
-        throw new UnsupportedOperationException(linkable.type + " is not implement yet.");
     }
 
     public static void link(String modId, TargetType type, List<TargetId> target, Field field) {
