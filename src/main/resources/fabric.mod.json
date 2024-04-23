@@ -16,6 +16,12 @@
   "entrypoints": {
     "main": [
       "com.iafenvoy.annotationlib.AnnotationLib"
+    ],
+    "client": [
+      "com.iafenvoy.annotationlib.AnnotationLibClient"
+    ],
+    "server": [
+      "com.iafenvoy.annotationlib.AnnotationLibServer"
     ]
   },
   "mixins": [

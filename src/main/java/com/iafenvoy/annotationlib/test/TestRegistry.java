@@ -1,12 +1,14 @@
 package com.iafenvoy.annotationlib.test;
 
 import com.iafenvoy.annotationlib.AnnotationLib;
-import com.iafenvoy.annotationlib.annotation.*;
+import com.iafenvoy.annotationlib.annotation.CallbackHandler;
+import com.iafenvoy.annotationlib.annotation.ModId;
+import com.iafenvoy.annotationlib.annotation.TargetId;
 import com.iafenvoy.annotationlib.annotation.registration.Group;
 import com.iafenvoy.annotationlib.annotation.registration.ItemReg;
 import com.iafenvoy.annotationlib.annotation.registration.Link;
 import com.iafenvoy.annotationlib.annotation.registration.ObjectReg;
-import com.iafenvoy.annotationlib.api.IAnnotationLibEntryPoint;
+import com.iafenvoy.annotationlib.api.IAnnotatedRegistryEntry;
 import com.iafenvoy.annotationlib.util.EntityHelper;
 import com.iafenvoy.annotationlib.util.TargetType;
 import net.fabricmc.fabric.api.item.v1.FabricItemSettings;
@@ -18,7 +20,7 @@ import net.minecraft.item.Item;
 
 @SuppressWarnings("unused")
 @ModId(AnnotationLib.MOD_ID)
-public class TestRegistry implements IAnnotationLibEntryPoint {
+public class TestRegistry implements IAnnotatedRegistryEntry {
     //This will print a warning
     public static final String UNUSED_STRING = "unused";
     //Success
@@ -43,4 +45,6 @@ public class TestRegistry implements IAnnotationLibEntryPoint {
     public static void callback() {
         AnnotationLib.LOGGER.info("Callback called");
     }
+
+
 }

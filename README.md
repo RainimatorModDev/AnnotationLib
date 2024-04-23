@@ -14,7 +14,7 @@ Not use until release. Please import it with `flatDir`.
 
 ### Common
 
-For every class, you need to implement `IAnnotationLibEntryPoint`.
+For every registration class, you need to implement `IAnnotatedRegistryEntry`.
 
 Then add a `entrypoint` into `fabric.mod.json`
 
@@ -22,6 +22,12 @@ Then add a `entrypoint` into `fabric.mod.json`
 {
   "entrypoints": {
     "annotation_lib": [
+      "your class here"
+    ],
+    "annotation_lib_client": [
+      "your class here"
+    ],
+    "annotation_lib_server": [
       "your class here"
     ]
   }
