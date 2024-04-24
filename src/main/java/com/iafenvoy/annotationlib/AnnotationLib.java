@@ -1,6 +1,8 @@
 package com.iafenvoy.annotationlib;
 
+import com.iafenvoy.annotationlib.api.CommandApi;
 import com.iafenvoy.annotationlib.api.RegistryApi;
+import com.iafenvoy.annotationlib.test.TestCommand;
 import com.iafenvoy.annotationlib.test.TestRegistry;
 import com.mojang.logging.LogUtils;
 import net.fabricmc.api.ModInitializer;
@@ -14,7 +16,9 @@ public class AnnotationLib implements ModInitializer {
     @Override
     public void onInitialize() {
         EntryPointLoader.loadCommon();
-        if (FabricLoader.getInstance().isDevelopmentEnvironment())
+        if (FabricLoader.getInstance().isDevelopmentEnvironment()) {
             RegistryApi.register(TestRegistry.class);
+            CommandApi.register(TestCommand.class);
+        }
     }
 }

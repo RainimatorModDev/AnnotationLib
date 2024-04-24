@@ -26,7 +26,7 @@ public class NetworkManager {
             Object obj = clazz.getConstructor().newInstance();
             if (FabricLoader.getInstance().getEnvironmentType() == EnvType.CLIENT && ClientPlayNetworking.PlayChannelHandler.class.isAssignableFrom(clazz)) {
                 Method method = clazz.getDeclaredMethod("receive", MinecraftClient.class, ClientPlayNetworkHandler.class, PacketByteBuf.class, PacketSender.class);
-                ClientPlayNetworking.registerReceiver(IdentifierHelper.buildFromTarget(networkHandler.value()), (client, handler, buf, responseSender) -> {
+                ClientPlayNetworking.registerGlobalReceiver(IdentifierHelper.buildFromTarget(networkHandler.value()), (client, handler, buf, responseSender) -> {
                     try {
                         method.invoke(obj, client, handler, buf, responseSender);
                     } catch (InvocationTargetException | IllegalAccessException e) {

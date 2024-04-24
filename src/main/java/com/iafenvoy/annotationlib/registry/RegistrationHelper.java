@@ -3,6 +3,7 @@ package com.iafenvoy.annotationlib.registry;
 import com.iafenvoy.annotationlib.AnnotationLib;
 import com.iafenvoy.annotationlib.annotation.registration.AttributeBuilder;
 import com.iafenvoy.annotationlib.annotation.registration.ParticleProvider;
+import com.iafenvoy.annotationlib.util.MethodHelper;
 import io.netty.util.internal.UnstableApi;
 import net.fabricmc.fabric.api.client.particle.v1.ParticleFactoryRegistry;
 import net.fabricmc.fabric.api.object.builder.v1.entity.FabricDefaultAttributeRegistry;
@@ -24,7 +25,7 @@ public class RegistrationHelper {
             for (Method method : entityClass.getMethods()) {
                 AttributeBuilder attributeBuilder = method.getAnnotation(AttributeBuilder.class);
                 if (Modifier.isStatic(method.getModifiers()) && attributeBuilder != null) {
-                    if (method.getParameterCount() == 0 && DefaultAttributeContainer.Builder.class.isAssignableFrom(method.getReturnType())) {
+                    if (MethodHelper.check(method, DefaultAttributeContainer.Builder.class)) {
                         if (Modifier.isPrivate(method.getModifiers()))
                             method.setAccessible(true);
                         try {

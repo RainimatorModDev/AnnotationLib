@@ -1,5 +1,6 @@
 package com.iafenvoy.annotationlib.annotation.registration;
 
+import com.iafenvoy.annotationlib.annotation.UnusedYet;
 import net.minecraft.client.particle.ParticleFactory;
 import net.minecraft.client.particle.SpriteProvider;
 
@@ -19,7 +20,7 @@ import java.lang.annotation.*;
  * @version 1.0
  * @since 1.0
  */
-@Deprecated
+@UnusedYet
 @Documented
 @Retention(RetentionPolicy.RUNTIME)
 @Target({ElementType.METHOD})

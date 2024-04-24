@@ -1,5 +1,7 @@
 package com.iafenvoy.annotationlib.annotation.registration;
 
+import com.iafenvoy.annotationlib.annotation.UnusedYet;
+
 import java.lang.annotation.*;
 
 /**
@@ -9,7 +11,7 @@ import java.lang.annotation.*;
  * @version 1.0
  * @since 1.0
  */
-@Deprecated
+@UnusedYet
 @Documented
 @Retention(RetentionPolicy.RUNTIME)
 @Target({ElementType.FIELD})

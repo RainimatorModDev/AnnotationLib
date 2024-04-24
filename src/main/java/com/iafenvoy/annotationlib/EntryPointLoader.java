@@ -1,7 +1,9 @@
 package com.iafenvoy.annotationlib;
 
+import com.iafenvoy.annotationlib.api.IAnnotatedCommandEntry;
 import com.iafenvoy.annotationlib.api.IAnnotatedNetworkEntry;
 import com.iafenvoy.annotationlib.api.IAnnotatedRegistryEntry;
+import com.iafenvoy.annotationlib.command.CommandRegistration;
 import com.iafenvoy.annotationlib.network.NetworkManager;
 import com.iafenvoy.annotationlib.registry.RegistrationManager;
 import com.iafenvoy.annotationlib.util.IAnnotationLibEntryPoint;
@@ -32,6 +34,8 @@ public class EntryPointLoader {
                 RegistrationManager.register(entrypoint.getClass());
             if (IAnnotatedNetworkEntry.class.isAssignableFrom(clazz))
                 NetworkManager.register(entrypoint.getClass());
+            if (IAnnotatedCommandEntry.class.isAssignableFrom(clazz))
+                CommandRegistration.register(entrypoint.getClass());
         }
     }
 }

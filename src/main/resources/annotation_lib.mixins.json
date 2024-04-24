@@ -6,8 +6,7 @@
   "mixins": [
     "RegistriesMixin"
   ],
-  "client": [
-  ],
+  "refmap": "AnnotationLib-refmap.json",
   "injectors": {
     "defaultRequire": 1
   }
