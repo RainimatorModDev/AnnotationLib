@@ -1,6 +1,7 @@
 package com.iafenvoy.annotationlib.test;
 
 import com.iafenvoy.annotationlib.annotation.command.CommandProcessor;
+import com.iafenvoy.annotationlib.annotation.command.Permission;
 import com.iafenvoy.annotationlib.api.IAnnotatedCommandEntry;
 import com.iafenvoy.annotationlib.util.CommandArgumentType;
 import com.mojang.brigadier.arguments.StringArgumentType;
@@ -30,6 +31,7 @@ public class TestCommand implements IAnnotatedCommandEntry {
         return 1;
     }
 
+    @Permission(4)
     @CommandProcessor("sub")
     public static class SubCommand {
         @CommandProcessor//Command: /test_command sub
@@ -38,7 +40,6 @@ public class TestCommand implements IAnnotatedCommandEntry {
                 context.getSource().getPlayer().sendMessage(Text.literal("Hello from test command - sub!"));
             return 1;
         }
-
         @CommandProcessor(value = "ok")//Command: /test_command sub ok
         public static int ok(CommandContext<ServerCommandSource> context) {
             if (context.getSource().getPlayer() != null)

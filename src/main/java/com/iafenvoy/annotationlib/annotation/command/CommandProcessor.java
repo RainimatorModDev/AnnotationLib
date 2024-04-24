@@ -1,6 +1,5 @@
 package com.iafenvoy.annotationlib.annotation.command;
 
-import com.iafenvoy.annotationlib.annotation.UnusedYet;
 import com.iafenvoy.annotationlib.util.CommandArgumentType;
 import com.mojang.brigadier.Command;
 import net.minecraft.server.command.CommandManager;
@@ -17,7 +16,6 @@ import java.lang.annotation.*;
  * @version 1.0
  * @since 1.0
  */
-@UnusedYet
 @Documented
 @Retention(RetentionPolicy.RUNTIME)
 @Target({ElementType.TYPE, ElementType.METHOD})

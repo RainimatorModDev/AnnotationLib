@@ -2,11 +2,13 @@ package com.iafenvoy.annotationlib.command;
 
 import com.iafenvoy.annotationlib.AnnotationLib;
 import com.iafenvoy.annotationlib.annotation.command.CommandProcessor;
+import com.iafenvoy.annotationlib.annotation.command.Permission;
 import com.iafenvoy.annotationlib.util.CommandArgumentType;
 import com.iafenvoy.annotationlib.util.MethodHelper;
 import com.mojang.brigadier.Command;
 import com.mojang.brigadier.builder.ArgumentBuilder;
 import com.mojang.brigadier.builder.LiteralArgumentBuilder;
+import com.mojang.brigadier.builder.RequiredArgumentBuilder;
 import com.mojang.brigadier.context.CommandContext;
 import net.fabricmc.fabric.api.command.v2.CommandRegistrationCallback;
 import net.minecraft.server.command.CommandManager;
@@ -32,12 +34,20 @@ public class CommandRegistration {
             if (processor == null || processor.environment() != CommandManager.RegistrationEnvironment.ALL && processor.environment() != environment)
                 continue;
             if (MethodHelper.match(method, Command.class)) {
+                Permission permission = method.getAnnotation(Permission.class);
                 if (processor.value().isBlank())
                     builder.executes(context -> tryToInvoke(method, context));
-                else if (processor.type() == CommandArgumentType.LITERAL)
-                    builder.then(CommandManager.literal(processor.value()).executes(context -> tryToInvoke(method, context)));
-                else
-                    builder.then(processor.type().getArgumentBuilder(processor.value()).executes(context -> tryToInvoke(method, context)));
+                else if (processor.type() == CommandArgumentType.LITERAL) {
+                    LiteralArgumentBuilder<ServerCommandSource> literalArgumentBuilder = CommandManager.literal(processor.value());
+                    if (permission != null)
+                        literalArgumentBuilder.requires(source -> source.hasPermissionLevel(permission.value()));
+                    builder.then(literalArgumentBuilder.executes(context -> tryToInvoke(method, context)));
+                } else {
+                    RequiredArgumentBuilder<ServerCommandSource, ?> requiredArgumentBuilder = processor.type().getArgumentBuilder(processor.value());
+                    if (permission != null)
+                        requiredArgumentBuilder.requires(source -> source.hasPermissionLevel(permission.value()));
+                    builder.then(requiredArgumentBuilder.executes(context -> tryToInvoke(method, context)));
+                }
             } else
                 AnnotationLib.LOGGER.warn(String.format("Method %s in class %s has a wrong signature, see @CommandProcessor for more info.", method.getName(), clazz.getName()));
         }
@@ -46,9 +56,14 @@ public class CommandRegistration {
             CommandProcessor processor = c.getAnnotation(CommandProcessor.class);
             if (processor == null || processor.environment() != CommandManager.RegistrationEnvironment.ALL && processor.environment() != environment)
                 continue;
-            if (processor.value().isBlank())
+            if (processor.value().isBlank()) {
                 AnnotationLib.LOGGER.warn(String.format("Sub-class %s in class %s shouldn't have blank value, see @CommandProcessor for more info.", c.getName(), clazz.getName()));
-            else if (processor.type() == CommandArgumentType.LITERAL)
+                continue;
+            }
+            Permission permission = c.getAnnotation(Permission.class);
+            if (permission != null)
+                builder.requires(source -> source.hasPermissionLevel(permission.value()));
+            if (processor.type() == CommandArgumentType.LITERAL)
                 builder.then(subRegister(CommandManager.literal(processor.value()), c, environment));
             else
                 builder.then(subRegister(processor.type().getArgumentBuilder(processor.value()), c, environment));
