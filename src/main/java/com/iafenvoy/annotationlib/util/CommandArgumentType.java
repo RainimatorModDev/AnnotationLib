@@ -7,6 +7,7 @@ import net.minecraft.command.argument.*;
 import net.minecraft.server.command.CommandManager;
 import net.minecraft.server.command.ServerCommandSource;
 
+@SuppressWarnings("unused")
 public enum CommandArgumentType {
     LITERAL(null),
     WORD(StringArgumentType.word()),
@@ -25,7 +26,7 @@ public enum CommandArgumentType {
         this.argumentType = argumentType;
     }
 
-    public RequiredArgumentBuilder<ServerCommandSource,?> getArgumentBuilder(String name){
-        return CommandManager.argument(name,argumentType);
+    public RequiredArgumentBuilder<ServerCommandSource, ?> getArgumentBuilder(String name) {
+        return CommandManager.argument(name, argumentType);
     }
 }

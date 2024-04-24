@@ -22,9 +22,24 @@ import java.lang.annotation.*;
 @Retention(RetentionPolicy.RUNTIME)
 @Target({ElementType.TYPE, ElementType.METHOD})
 public @interface CommandProcessor {
+    /**
+     * The name of literal or argument name, blank for root command.
+     *
+     * @return {@link String }
+     */
     String value() default "";
 
+    /**
+     * The argument type, default for literal.
+     *
+     * @return {@link CommandArgumentType }
+     */
     CommandArgumentType type() default CommandArgumentType.LITERAL;
 
+    /**
+     * The command register environment.
+     *
+     * @return {@link CommandManager.RegistrationEnvironment }
+     */
     CommandManager.RegistrationEnvironment environment() default CommandManager.RegistrationEnvironment.ALL;
 }

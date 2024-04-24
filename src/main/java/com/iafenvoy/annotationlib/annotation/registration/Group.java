@@ -17,7 +17,7 @@ import java.lang.annotation.*;
 @Target({ElementType.FIELD})
 public @interface Group {
     /**
-     * <p>The target item group.</p>
+     * The target item group.
      *
      * @return {@link String }
      * @see Identifier

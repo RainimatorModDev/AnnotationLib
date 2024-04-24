@@ -4,6 +4,7 @@ import com.iafenvoy.annotationlib.registry.RegistrationGroup;
 import net.minecraft.item.ItemGroup;
 import net.minecraft.registry.Registries;
 import net.minecraft.util.Identifier;
+
 /**
  * <p>Provide API to internal item group.</p>
  *

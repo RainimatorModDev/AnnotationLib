@@ -23,7 +23,7 @@ import java.lang.annotation.*;
 @Target({ElementType.FIELD})
 public @interface Link {
     /**
-     * <p>The target object ID. Must in identifier format (namespace:path).</p>
+     * The target object ID. Must in identifier format (namespace:path).
      *
      * @return {@link String }
      * @see Identifier
@@ -38,7 +38,7 @@ public @interface Link {
     TargetId[] targets() default {};
 
     /**
-     * <p>The object type you want to link.</p>
+     * The object type you want to link.
      *
      * @return {@link TargetType }
      * @see TargetType

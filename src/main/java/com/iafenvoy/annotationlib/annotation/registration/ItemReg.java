@@ -19,13 +19,14 @@ import java.lang.annotation.*;
 @Target({ElementType.FIELD})
 public @interface ItemReg {
     /**
-     * <p>The register ID</p>
+     * The register ID.
      *
      * @return {@link String }
      */
     String value() default "";
+
     /**
-     * <p>The target item group.</p>
+     * The target item group.
      *
      * @return {@link String }
      * @see Identifier

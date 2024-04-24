@@ -18,7 +18,7 @@ import java.lang.annotation.*;
 @Target({ElementType.FIELD})
 public @interface ObjectReg {
     /**
-     * <p>The register ID</p>
+     * The register ID.
      *
      * @return {@link String }
      */

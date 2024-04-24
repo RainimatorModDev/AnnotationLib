@@ -2,8 +2,8 @@ package com.iafenvoy.annotationlib.annotation.registration;
 
 import com.iafenvoy.annotationlib.annotation.TargetId;
 import com.iafenvoy.annotationlib.annotation.UnusedYet;
-import net.minecraft.util.Identifier;
 import net.minecraft.item.BlockItem;
+import net.minecraft.util.Identifier;
 
 import java.lang.annotation.*;
 
@@ -22,14 +22,14 @@ import java.lang.annotation.*;
 @Target({ElementType.FIELD})
 public @interface BlockReg {
     /**
-     * <p>The register ID</p>
+     * The register ID.
      *
      * @return {@link String }
      */
     String value() default "";
 
     /**
-     * <p>The target item group.</p>
+     * The target item group.
      *
      * @return {@link String }
      * @see Identifier

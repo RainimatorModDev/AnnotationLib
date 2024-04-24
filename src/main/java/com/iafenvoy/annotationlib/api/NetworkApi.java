@@ -2,6 +2,7 @@ package com.iafenvoy.annotationlib.api;
 
 import com.iafenvoy.annotationlib.annotation.ModId;
 import com.iafenvoy.annotationlib.network.NetworkManager;
+
 /**
  * <p>Provide API to internal network system.</p>
  *
@@ -17,7 +18,7 @@ public class NetworkApi {
      *
      * @param clazz Class want to be registered. It must have {@link ModId} Annotation
      */
-    public static void register(Class<?> clazz){
+    public static void register(Class<?> clazz) {
         NetworkManager.register(clazz);
     }
 }

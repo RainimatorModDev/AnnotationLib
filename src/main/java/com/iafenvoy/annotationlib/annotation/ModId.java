@@ -14,7 +14,7 @@ import java.lang.annotation.*;
 @Target({ElementType.TYPE})
 public @interface ModId {
     /**
-     * <p>The Mod ID.</p>
+     * The Mod ID.
      *
      * @return {@link String }
      */

@@ -29,6 +29,9 @@ public class TestRegistry implements IAnnotatedRegistryEntry {
     //Success
     @ObjectReg
     public static final Block TEST_BLOCK = new Block(AbstractBlock.Settings.create());
+    //Success
+    @ObjectReg
+    public static final EntityType<MyEntity> TEST_ENTITY_TYPE = EntityHelper.build(MyEntity::new, SpawnGroup.MONSTER, 64, 3, true, 0.6F, 1.8F);
     //Success and link to the block above
     @Group(@TargetId(namespace = "minecraft", value = "building_blocks"))
     @Link(type = TargetType.BLOCK, targets = {@TargetId(namespace = AnnotationLib.MOD_ID, value = "test_block")})
@@ -36,9 +39,6 @@ public class TestRegistry implements IAnnotatedRegistryEntry {
     //This will print a warning
     @Link(type = TargetType.BLOCK, target = @TargetId("not_existed"))
     public static Item UNUSED_LINK_ITEM = null;
-    //Success
-    @ObjectReg
-    public static final EntityType<MyEntity> TEST_ENTITY_TYPE = EntityHelper.build(MyEntity::new, SpawnGroup.MONSTER, 64, 3, true, 0.6F, 1.8F);
 
     //This method will be called after register
     @CallbackHandler

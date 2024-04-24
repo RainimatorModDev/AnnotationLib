@@ -21,7 +21,8 @@ public class TestCommand implements IAnnotatedCommandEntry {
         return 1;
     }
 
-    @CommandProcessor(value = "entity", type = CommandArgumentType.SINGLE_ENTITY_SELECTOR)//Command: /test_command <entity_selector>
+    @CommandProcessor(value = "entity", type = CommandArgumentType.SINGLE_ENTITY_SELECTOR)
+    //Command: /test_command <entity_selector>
     public static int entity(CommandContext<ServerCommandSource> context) throws CommandSyntaxException {
         Entity entity = EntityArgumentType.getEntity(context, "entity");
         if (context.getSource().getPlayer() != null)
