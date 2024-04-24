@@ -4,7 +4,7 @@
 
 This is a library to provide some operations powered by annotations.
 
-Currently supported: `Registration`
+Currently supported: `Registration`, `Network Handler`, `Command System`
 
 ## Maven?
 
@@ -14,9 +14,7 @@ Not use until release. Please import it with `flatDir`.
 
 ### Common
 
-For every registration class, you need to implement `IAnnotatedRegistryEntry`.
-
-Then add a `entrypoint` into `fabric.mod.json`
+For every registration class, add a `entrypoint` into `fabric.mod.json`
 
 ```json
 {
@@ -25,53 +23,35 @@ Then add a `entrypoint` into `fabric.mod.json`
       "your class here"
     ],
     "annotation_lib_client": [
-      "your class here"
+      "your client only class here"
     ],
     "annotation_lib_server": [
-      "your class here"
+      "your server only class here"
     ]
   }
 }
 ```
 
-Or you can use `RegistryApi.register(YourClass.class);`
+Or you can use register APIs. (See below)
 
 ### Registration
 
-```java
+You need to implement `IAnnotatedRegistryEntry` and entrypoint or use `RegistryApi.register(YourClass.class);`.
 
-@ModId(AnnotationLib.MOD_ID)//Must have
-public class TestRegistry implements IAnnotationLibEntryPoint {
-    //This will print a warning
-    public static final String UNUSED_STRING = "unused";
+[Example Code](https://github.com/IAFEnvoy/AnnotationLib/blob/main/src/main/java/com/iafenvoy/annotationlib/test/TestRegistry.java)
 
-    //Success
-    @ObjectReg//Register anything with this
-    public static final Item TEST_ITEM = new Item(new FabricItemSettings());
+**Notice: if you use `@Group` or `@ItemGroup` and use the `group` param, you should use `ItemGroupApi` manually.**
 
-    //Success
-    @ObjectReg("new_id")//You can also use another name
-    public static final Block TEST_BLOCK = new Block(AbstractBlock.Settings.create());
+[Example Code](https://github.com/RainimatorModDev/RainimatorMod/blob/master/src/main/java/com/rainimator/rainimatormod/registry/ModCreativeTabs.java)
 
-    //Success and link to the block above
-    @Group(@TargetId(namespace = "minecraft", value = "building_blocks"))//Put into an inventory
-    @Link(type = TargetType.BLOCK, targets = {@TargetId(namespace = AnnotationLib.MOD_ID, value = "test_block")})
-    public static Item TEST_BLOCK_ITEM = null;
+### Network Handler
 
-    //This will print a warning
-    @Link(type = TargetType.BLOCK, target = @TargetId("not_existed"))
-    public static Item UNUSED_LINK_ITEM = null;
+You need to implement `IAnnotatedNetworkEntry` and entrypoint or use `NetworkApi.register(YourClass.class);`.
 
-    //Success
-    @ObjectReg//See @AttributeBuilder for more info
-    public static final EntityType<MyEntity> TEST_ENTITY_TYPE = EntityHelper.build(MyEntity::new, SpawnGroup.MONSTER, 64, 3, true, 0.6F, 1.8F);
+[Example Code](https://github.com/RainimatorModDev/RainimatorMod/tree/master/src/main/java/com/rainimator/rainimatormod/network)
 
-    //Also can be used to register SoundEvent, StatusEffect, ItemGroup
+### Command System
 
-    //This method will be called after register
-    @CallbackHandler
-    public static void callback() {
-        AnnotationLib.LOGGER.info("Callback called");
-    }
-}
-```
+You need to implement `IAnnotatedNetworkEntry` and entrypoint or use `CommandApi.register(YourClass.class);`.
+
+[Example Code](https://github.com/IAFEnvoy/AnnotationLib/blob/main/src/main/java/com/iafenvoy/annotationlib/test/TestCommand.java)
