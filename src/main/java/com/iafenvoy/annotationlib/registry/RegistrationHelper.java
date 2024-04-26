@@ -2,18 +2,11 @@ package com.iafenvoy.annotationlib.registry;
 
 import com.iafenvoy.annotationlib.AnnotationLib;
 import com.iafenvoy.annotationlib.annotation.registration.AttributeBuilder;
-import com.iafenvoy.annotationlib.annotation.registration.ParticleProvider;
 import com.iafenvoy.annotationlib.util.MethodHelper;
-import io.netty.util.internal.UnstableApi;
-import net.fabricmc.fabric.api.client.particle.v1.ParticleFactoryRegistry;
 import net.fabricmc.fabric.api.object.builder.v1.entity.FabricDefaultAttributeRegistry;
-import net.minecraft.client.particle.Particle;
-import net.minecraft.client.particle.ParticleFactory;
 import net.minecraft.entity.EntityType;
 import net.minecraft.entity.LivingEntity;
 import net.minecraft.entity.attribute.DefaultAttributeContainer;
-import net.minecraft.particle.ParticleEffect;
-import net.minecraft.particle.ParticleType;
 
 import java.lang.reflect.*;
 
