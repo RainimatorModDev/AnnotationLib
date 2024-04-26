@@ -1,7 +1,10 @@
 package com.iafenvoy.annotationlib.network;
 
 import com.iafenvoy.annotationlib.AnnotationLib;
+import com.iafenvoy.annotationlib.annotation.AnnotationProcessor;
 import com.iafenvoy.annotationlib.annotation.network.NetworkHandler;
+import com.iafenvoy.annotationlib.api.IAnnotatedNetworkEntry;
+import com.iafenvoy.annotationlib.util.IAnnotationProcessor;
 import com.iafenvoy.annotationlib.util.IdentifierHelper;
 import net.fabricmc.api.EnvType;
 import net.fabricmc.fabric.api.client.networking.v1.ClientPlayNetworking;
@@ -18,8 +21,10 @@ import net.minecraft.server.network.ServerPlayerEntity;
 import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
 
-public class NetworkManager {
-    public static void register(Class<?> clazz) {
+@AnnotationProcessor(IAnnotatedNetworkEntry.class)
+public class NetworkManager implements IAnnotationProcessor {
+    @Override
+    public void process(Class<?> clazz) {
         NetworkHandler networkHandler = clazz.getAnnotation(NetworkHandler.class);
         if (networkHandler == null) return;
         try {

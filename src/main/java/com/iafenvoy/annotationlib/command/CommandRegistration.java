@@ -1,9 +1,12 @@
 package com.iafenvoy.annotationlib.command;
 
 import com.iafenvoy.annotationlib.AnnotationLib;
+import com.iafenvoy.annotationlib.annotation.AnnotationProcessor;
 import com.iafenvoy.annotationlib.annotation.command.CommandProcessor;
 import com.iafenvoy.annotationlib.annotation.command.Permission;
+import com.iafenvoy.annotationlib.api.IAnnotatedCommandEntry;
 import com.iafenvoy.annotationlib.util.CommandArgumentType;
+import com.iafenvoy.annotationlib.util.IAnnotationProcessor;
 import com.iafenvoy.annotationlib.util.MethodHelper;
 import com.mojang.brigadier.Command;
 import com.mojang.brigadier.builder.ArgumentBuilder;
@@ -18,7 +21,17 @@ import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
 import java.lang.reflect.Modifier;
 
-public class CommandRegistration {
+@AnnotationProcessor(IAnnotatedCommandEntry.class)
+public class CommandRegistration implements IAnnotationProcessor {
+    @Override
+    public void process(Class<?> clazz) {
+        CommandProcessor main = clazz.getAnnotation(CommandProcessor.class);
+        if (main == null) return;
+        if (main.type() != CommandArgumentType.LITERAL)
+            throw new IllegalArgumentException("Root command must be literal");
+        CommandRegistrationCallback.EVENT.register(((dispatcher, registryAccess, environment) -> dispatcher.register((LiteralArgumentBuilder<ServerCommandSource>) subRegister(CommandManager.literal(main.value()), clazz, environment))));
+    }
+
     private static int tryToInvoke(Method method, CommandContext<ServerCommandSource> context) {
         try {
             return (int) method.invoke(null, context);
@@ -69,13 +82,5 @@ public class CommandRegistration {
                 builder.then(subRegister(processor.type().getArgumentBuilder(processor.value()), c, environment));
         }
         return builder;
-    }
-
-    public static void register(Class<?> clazz) {
-        CommandProcessor main = clazz.getAnnotation(CommandProcessor.class);
-        if (main == null) return;
-        if (main.type() != CommandArgumentType.LITERAL)
-            throw new IllegalArgumentException("Root command must be literal");
-        CommandRegistrationCallback.EVENT.register(((dispatcher, registryAccess, environment) -> dispatcher.register((LiteralArgumentBuilder<ServerCommandSource>) subRegister(CommandManager.literal(main.value()), clazz, environment))));
     }
 }
