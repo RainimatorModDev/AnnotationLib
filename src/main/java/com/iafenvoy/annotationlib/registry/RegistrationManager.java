@@ -14,6 +14,7 @@ import net.fabricmc.fabric.api.client.particle.v1.ParticleFactoryRegistry;
 import net.minecraft.block.Block;
 import net.minecraft.client.particle.ParticleFactory;
 import net.minecraft.client.particle.SpriteProvider;
+import net.minecraft.enchantment.Enchantment;
 import net.minecraft.entity.EntityType;
 import net.minecraft.entity.effect.StatusEffect;
 import net.minecraft.item.Item;
@@ -102,7 +103,10 @@ public class RegistrationManager implements IAnnotationProcessor {
                             AnnotationLib.LOGGER.error("Cannot find constructor: " + field.getName(), e);
                         }
                     }
-                } else
+                } else if (Enchantment.class.isAssignableFrom(field.getType()) && name != null) {
+                    register(Registries.ENCHANTMENT, modId, name, (Enchantment) obj);
+                    registered = true;
+                }  else
                     AnnotationLib.LOGGER.error("Cannot register this item since this type is not implemented yet: " + field.getName());
             } catch (IllegalAccessException e) {
                 AnnotationLib.LOGGER.error("Fail to get object: " + field.getName(), e);
