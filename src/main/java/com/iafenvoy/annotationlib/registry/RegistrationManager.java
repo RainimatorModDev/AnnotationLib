@@ -1,6 +1,7 @@
 package com.iafenvoy.annotationlib.registry;
 
 import com.iafenvoy.annotationlib.AnnotationLib;
+import com.iafenvoy.annotationlib.EntryPointLoader;
 import com.iafenvoy.annotationlib.annotation.AnnotationProcessor;
 import com.iafenvoy.annotationlib.annotation.CallbackHandler;
 import com.iafenvoy.annotationlib.annotation.ModId;
@@ -8,7 +9,6 @@ import com.iafenvoy.annotationlib.annotation.TargetId;
 import com.iafenvoy.annotationlib.annotation.registration.*;
 import com.iafenvoy.annotationlib.api.IAnnotatedRegistryEntry;
 import com.iafenvoy.annotationlib.util.IAnnotationProcessor;
-import com.iafenvoy.annotationlib.util.IdentifierHelper;
 import com.iafenvoy.annotationlib.util.UncheckedMethods;
 import net.fabricmc.fabric.api.client.particle.v1.ParticleFactoryRegistry;
 import net.minecraft.block.Block;
@@ -19,6 +19,7 @@ import net.minecraft.entity.EntityType;
 import net.minecraft.entity.effect.StatusEffect;
 import net.minecraft.item.Item;
 import net.minecraft.item.ItemGroup;
+import net.minecraft.item.ItemStack;
 import net.minecraft.particle.ParticleEffect;
 import net.minecraft.particle.ParticleType;
 import net.minecraft.registry.Registries;
@@ -34,8 +35,7 @@ public class RegistrationManager implements IAnnotationProcessor {
     @Override
     public void process(Class<?> clazz) {
         ModId modIdAnnotation = clazz.getAnnotation(ModId.class);
-        if (modIdAnnotation == null)
-            return;
+        if (modIdAnnotation == null) return;
         //Has @ModId
         boolean linkableChanged = false;
         String modId = modIdAnnotation.value();
@@ -47,6 +47,7 @@ public class RegistrationManager implements IAnnotationProcessor {
                 continue;
             //@Group
             tryPutGroup(modId, field);
+            if (ItemStack.class.isAssignableFrom(field.getType())) continue;
             //@Link
             if (tryPutLink(modId, field)) continue;
             boolean registered = false;
@@ -56,9 +57,12 @@ public class RegistrationManager implements IAnnotationProcessor {
                 if (Item.class.isAssignableFrom(field.getType())) {
                     ItemReg itemReg = field.getAnnotation(ItemReg.class);
                     if (itemReg != null) {
-                        register(Registries.ITEM, modId, itemReg.value(), (Item) obj);
-                        if (!itemReg.group().value().isBlank())
-                            RegistrationGroup.add(IdentifierHelper.buildFromTarget(itemReg.group()), field);
+                        name = itemReg.value().isBlank() ? field.getName() : itemReg.value();
+                        register(Registries.ITEM, modId, name.toLowerCase(), (Item) obj);
+                        if (!itemReg.group().value().isBlank()) {
+                            TargetId targetId = itemReg.group();
+                            RegistrationGroup.add(new Identifier(targetId.namespace().isBlank() ? modId : targetId.namespace(), targetId.value()), field);
+                        }
                         registered = true;
                     } else if (name != null) {
                         register(Registries.ITEM, modId, name, (Item) obj);
@@ -90,14 +94,16 @@ public class RegistrationManager implements IAnnotationProcessor {
                             Constructor<? extends ParticleFactory<ParticleEffect>> constructor = particleReg.value().getConstructor(SpriteProvider.class);
                             ParticleType<? extends ParticleEffect> particleType = (ParticleType<?>) obj;
                             register(Registries.PARTICLE_TYPE, modId, name, particleType);
-                            ParticleFactoryRegistry.getInstance().register(UncheckedMethods.getParticleType(particleType), provider -> {
-                                try {
-                                    return constructor.newInstance(provider);
-                                } catch (InvocationTargetException | InstantiationException | IllegalAccessException e) {
-                                    AnnotationLib.LOGGER.error("Cannot create particle provider with constructor: " + field.getName(), e);
-                                    throw new RuntimeException(e);
-                                }
-                            });
+                            if (EntryPointLoader.isClientSide)
+                                ParticleFactoryRegistry.getInstance().register(UncheckedMethods.getParticleType(particleType), provider -> {
+                                    try {
+                                        return constructor.newInstance(provider);
+                                    } catch (InvocationTargetException | InstantiationException |
+                                             IllegalAccessException e) {
+                                        AnnotationLib.LOGGER.error("Cannot create particle provider with constructor: " + field.getName(), e);
+                                        throw new RuntimeException(e);
+                                    }
+                                });
                             registered = true;
                         } catch (NoSuchMethodException e) {
                             AnnotationLib.LOGGER.error("Cannot find constructor: " + field.getName(), e);
@@ -106,7 +112,7 @@ public class RegistrationManager implements IAnnotationProcessor {
                 } else if (Enchantment.class.isAssignableFrom(field.getType()) && name != null) {
                     register(Registries.ENCHANTMENT, modId, name, (Enchantment) obj);
                     registered = true;
-                }  else
+                } else if (name != null)
                     AnnotationLib.LOGGER.error("Cannot register this item since this type is not implemented yet: " + field.getName());
             } catch (IllegalAccessException e) {
                 AnnotationLib.LOGGER.error("Fail to get object: " + field.getName(), e);

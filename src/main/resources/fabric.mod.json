@@ -1,7 +1,7 @@
 {
   "schemaVersion": 1,
   "id": "annotation_lib",
-  "version": "1.0",
+  "version": "0.7",
   "name": "AnnotationLib",
   "description": "The magic of annotations :)",
   "authors": [

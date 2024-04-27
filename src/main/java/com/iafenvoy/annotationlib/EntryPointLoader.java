@@ -2,10 +2,12 @@ package com.iafenvoy.annotationlib;
 
 import com.iafenvoy.annotationlib.annotation.AnnotationProcessor;
 import com.iafenvoy.annotationlib.command.CommandRegistration;
+import com.iafenvoy.annotationlib.config.ConfigManager;
 import com.iafenvoy.annotationlib.network.NetworkManager;
 import com.iafenvoy.annotationlib.registry.RegistrationManager;
 import com.iafenvoy.annotationlib.util.IAnnotationLibEntryPoint;
 import com.iafenvoy.annotationlib.util.IAnnotationProcessor;
+import net.fabricmc.api.EnvType;
 import net.fabricmc.loader.api.FabricLoader;
 
 import java.util.HashMap;
@@ -14,6 +16,7 @@ import java.util.Map;
 
 public class EntryPointLoader {
     private static EntryPointLoader INSTANCE = null;
+    public static final boolean isClientSide = FabricLoader.getInstance().getEnvironmentType() == EnvType.CLIENT;
     public final HashMap<Class<? extends IAnnotationLibEntryPoint>, IAnnotationProcessor> processors = new HashMap<>();
 
     public static EntryPointLoader getInstance() {
@@ -22,6 +25,7 @@ public class EntryPointLoader {
             INSTANCE.registerProcessor(new RegistrationManager());
             INSTANCE.registerProcessor(new NetworkManager());
             INSTANCE.registerProcessor(new CommandRegistration());
+            INSTANCE.registerProcessor(ConfigManager.INSTANCE);
         }
         return INSTANCE;
     }
@@ -34,7 +38,7 @@ public class EntryPointLoader {
     }
 
     public void loadClass(Class<?> clazz) {
-        for(Map.Entry<Class<? extends IAnnotationLibEntryPoint>, IAnnotationProcessor> entry:processors.entrySet())
+        for (Map.Entry<Class<? extends IAnnotationLibEntryPoint>, IAnnotationProcessor> entry : processors.entrySet())
             if (entry.getKey().isAssignableFrom(clazz))
                 entry.getValue().process(clazz);
     }

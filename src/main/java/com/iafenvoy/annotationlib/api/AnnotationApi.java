@@ -1,6 +1,7 @@
 package com.iafenvoy.annotationlib.api;
 
 import com.iafenvoy.annotationlib.EntryPointLoader;
+import com.iafenvoy.annotationlib.config.ConfigManager;
 import com.iafenvoy.annotationlib.util.IAnnotationLibEntryPoint;
 import com.iafenvoy.annotationlib.util.IAnnotationProcessor;
 import io.netty.util.internal.UnstableApi;
@@ -20,5 +21,10 @@ public class AnnotationApi {
     @UnstableApi
     public static void registerProcessor(IAnnotationProcessor processor) {
         EntryPointLoader.getInstance().registerProcessor(processor);
+    }
+
+    @SuppressWarnings("unchecked")
+    public static <T extends IAnnotatedConfigEntry> T getConfig(Class<T> clazz) {
+        return (T) ConfigManager.INSTANCE.configs.get(clazz);
     }
 }

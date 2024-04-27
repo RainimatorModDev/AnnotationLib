@@ -4,7 +4,7 @@
 
 This is a library to provide some operations powered by annotations.
 
-Currently supported: `Registration`, `Network Handler`, `Command System`
+Currently supported: `Registration`, `Network Handler`, `Command System`, `Config System`
 
 ## Maven?
 
@@ -32,11 +32,11 @@ For every registration class, add a `entrypoint` into `fabric.mod.json`
 }
 ```
 
-Or you can use register APIs. (See below)
+Or you can use `AnnotationApi.register(YourClass.class);`.
 
 ### Registration
 
-You need to implement `IAnnotatedRegistryEntry` and entrypoint or use `RegistryApi.register(YourClass.class);`.
+You need to implement `IAnnotatedRegistryEntry`.
 
 [Example Code](https://github.com/IAFEnvoy/AnnotationLib/blob/main/src/main/java/com/iafenvoy/annotationlib/test/TestRegistry.java)
 
@@ -46,12 +46,18 @@ You need to implement `IAnnotatedRegistryEntry` and entrypoint or use `RegistryA
 
 ### Network Handler
 
-You need to implement `IAnnotatedNetworkEntry` and entrypoint or use `NetworkApi.register(YourClass.class);`.
+You need to implement `IAnnotatedNetworkEntry`.
 
 [Example Code](https://github.com/RainimatorModDev/RainimatorMod/tree/master/src/main/java/com/rainimator/rainimatormod/network)
 
 ### Command System
 
-You need to implement `IAnnotatedNetworkEntry` and entrypoint or use `CommandApi.register(YourClass.class);`.
+You need to implement `IAnnotatedNetworkEntry`.
 
 [Example Code](https://github.com/IAFEnvoy/AnnotationLib/blob/main/src/main/java/com/iafenvoy/annotationlib/test/TestCommand.java)
+
+### Config System
+
+**More recommended to use Cloth Config, this is just a simple one.**
+
+You need to implement `IAnnotatedConfigEntry`.
