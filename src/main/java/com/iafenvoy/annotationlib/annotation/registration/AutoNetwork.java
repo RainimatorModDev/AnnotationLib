@@ -1,9 +1,12 @@
 package com.iafenvoy.annotationlib.annotation.registration;
 
+import com.iafenvoy.annotationlib.api.AnnotationApi;
+
 import java.lang.annotation.*;
 
 /**
- * <p>Register this particle with given provider class.</p>
+ * <p>Register this hotkey into network.</p>
+ * <p>Use <b>{@link AnnotationApi}.registerHotkeyHandler</b> to register your handler.</p>
  *
  * @author IAFEnvoy
  * @version 1.0
@@ -12,18 +15,11 @@ import java.lang.annotation.*;
 @Documented
 @Retention(RetentionPolicy.RUNTIME)
 @Target({ElementType.FIELD})
-public @interface ParticleReg {
+public @interface AutoNetwork {
     /**
-     * The particle provider.
-     *
-     * @return {@link Class}>>
-     */
-    Class<?> value();
-
-    /**
-     * The register id. Can be blank.
+     * The register ID.
      *
      * @return {@link String }
      */
-    String name() default "";
+    String value() default "";
 }

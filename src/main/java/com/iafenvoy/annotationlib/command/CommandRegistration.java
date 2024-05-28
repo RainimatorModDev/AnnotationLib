@@ -44,7 +44,7 @@ public class CommandRegistration implements IAnnotationProcessor {
         for (Method method : clazz.getMethods()) {
             if (!Modifier.isStatic(method.getModifiers())) continue;
             CommandProcessor processor = method.getAnnotation(CommandProcessor.class);
-            if (processor == null || processor.environment() != CommandManager.RegistrationEnvironment.ALL && processor.environment() != environment)
+            if (processor == null)
                 continue;
             if (MethodHelper.match(method, Command.class)) {
                 Permission permission = method.getAnnotation(Permission.class);
@@ -67,7 +67,7 @@ public class CommandRegistration implements IAnnotationProcessor {
         for (Class<?> c : clazz.getClasses()) {
             if (!Modifier.isStatic(c.getModifiers())) continue;
             CommandProcessor processor = c.getAnnotation(CommandProcessor.class);
-            if (processor == null || processor.environment() != CommandManager.RegistrationEnvironment.ALL && processor.environment() != environment)
+            if (processor == null)
                 continue;
             if (processor.value().isBlank()) {
                 AnnotationLib.LOGGER.warn(String.format("Sub-class %s in class %s shouldn't have blank value, see @CommandProcessor for more info.", c.getName(), clazz.getName()));

@@ -4,7 +4,7 @@ import java.lang.annotation.*;
 
 /**
  * <p>Indicate the permission to execute this command.</p>
- * <p>If you use it on method, the value field {@link CommandProcessor} shouldn't be blank.</p>
+ * <p>If you use it on method, the @{@link CommandProcessor} value field shouldn't be blank.</p>
  *
  * @author IAFEnvoy
  * @version 1.0

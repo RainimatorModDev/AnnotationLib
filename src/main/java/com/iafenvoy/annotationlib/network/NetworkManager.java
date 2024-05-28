@@ -39,7 +39,7 @@ public class NetworkManager implements IAnnotationProcessor {
                     }
                 });
             }
-            if (FabricLoader.getInstance().getEnvironmentType() == EnvType.SERVER && ServerPlayNetworking.PlayChannelHandler.class.isAssignableFrom(clazz)) {
+            if (ServerPlayNetworking.PlayChannelHandler.class.isAssignableFrom(clazz)) {
                 Method method = clazz.getDeclaredMethod("receive", MinecraftServer.class, ServerPlayerEntity.class, ServerPlayNetworkHandler.class, PacketByteBuf.class, PacketSender.class);
                 ServerPlayNetworking.registerGlobalReceiver(IdentifierHelper.buildFromTarget(networkHandler.value()), (server, player, handler, buf, sender) -> {
                     try {

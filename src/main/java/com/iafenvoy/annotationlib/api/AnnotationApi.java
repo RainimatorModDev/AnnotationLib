@@ -2,9 +2,11 @@ package com.iafenvoy.annotationlib.api;
 
 import com.iafenvoy.annotationlib.EntryPointLoader;
 import com.iafenvoy.annotationlib.config.ConfigManager;
+import com.iafenvoy.annotationlib.network.ServerHotkeyNetwork;
 import com.iafenvoy.annotationlib.util.IAnnotationLibEntryPoint;
 import com.iafenvoy.annotationlib.util.IAnnotationProcessor;
 import io.netty.util.internal.UnstableApi;
+import net.fabricmc.fabric.api.networking.v1.ServerPlayNetworking;
 
 /**
  * <p>Provide API to internal loading system.</p>
@@ -26,5 +28,9 @@ public class AnnotationApi {
     @SuppressWarnings("unchecked")
     public static <T extends IAnnotatedConfigEntry> T getConfig(Class<T> clazz) {
         return (T) ConfigManager.INSTANCE.configs.get(clazz);
+    }
+
+    public static void registerHotkeyHandler(String id, ServerPlayNetworking.PlayChannelHandler handler) {
+        ServerHotkeyNetwork.register(id, handler);
     }
 }

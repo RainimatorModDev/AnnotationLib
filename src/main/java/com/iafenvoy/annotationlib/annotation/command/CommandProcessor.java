@@ -33,11 +33,4 @@ public @interface CommandProcessor {
      * @return {@link CommandArgumentType }
      */
     CommandArgumentType type() default CommandArgumentType.LITERAL;
-
-    /**
-     * The command register environment.
-     *
-     * @return {@link CommandManager.RegistrationEnvironment }
-     */
-    CommandManager.RegistrationEnvironment environment() default CommandManager.RegistrationEnvironment.ALL;
 }
