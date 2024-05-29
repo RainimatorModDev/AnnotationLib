@@ -53,15 +53,15 @@ public class RegistrationLink {
         }
     }
 
-    public static void postEndRegister() {
-        synchronized (NEED_TO_LINK) {
-            if (NEED_TO_LINK.size() > 0)
-                AnnotationLib.LOGGER.warn("The following objects didn't link successfully and will keep the default value: " + String.join(", ", NEED_TO_LINK.stream().map(x -> {
-                    Field field = x.field;
-                    return field.getDeclaringClass().getName() + "." + field.getName();
-                }).toList()));
-        }
-    }
+//    public static void postEndRegister() {
+//        synchronized (NEED_TO_LINK) {
+//            if (NEED_TO_LINK.size() > 0)
+//                AnnotationLib.LOGGER.warn("The following objects didn't link successfully and will keep the default value: " + String.join(", ", NEED_TO_LINK.stream().map(x -> {
+//                    Field field = x.field;
+//                    return field.getDeclaringClass().getName() + "." + field.getName();
+//                }).toList()));
+//        }
+//    }
 
     private static class Linkable {
         private final TargetType type;
