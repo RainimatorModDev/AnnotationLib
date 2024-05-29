@@ -1,8 +1,7 @@
 package com.iafenvoy.annotationlib.annotation.registration;
 
-import net.minecraft.registry.Registry;
-
 import java.lang.annotation.*;
+import net.minecraft.util.registry.Registry;
 
 /**
  * <p>Automatically register all static fields in this class.</p>

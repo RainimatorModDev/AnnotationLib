@@ -9,8 +9,8 @@ import net.minecraft.block.Blocks;
 import net.minecraft.item.BlockItem;
 import net.minecraft.item.Item;
 import net.minecraft.item.SkullItem;
-import net.minecraft.registry.Registries;
 import net.minecraft.util.Identifier;
+import net.minecraft.util.registry.Registry;
 
 import java.lang.reflect.Field;
 import java.lang.reflect.Modifier;
@@ -23,15 +23,15 @@ public class RegistrationLink {
     private static void tryLink(Linkable linkable) {
         switch (linkable.type) {
             case BLOCK -> {
-                Block wantToLink = Registries.BLOCK.get(linkable.target.get(0));
+                Block wantToLink = Registry.BLOCK.get(linkable.target.get(0));
                 if (wantToLink == Blocks.AIR) //cannot find or haven't registered yet.
                     NEED_TO_LINK.add(linkable);
                 else
                     linkable.link(new BlockItem(wantToLink, new FabricItemSettings()));
             }
             case SKULL -> {
-                Block wantToLink1 = Registries.BLOCK.get(linkable.target.get(0));
-                Block wantToLink2 = Registries.BLOCK.get(linkable.target.get(1));
+                Block wantToLink1 = Registry.BLOCK.get(linkable.target.get(0));
+                Block wantToLink2 = Registry.BLOCK.get(linkable.target.get(1));
                 if (wantToLink1 == Blocks.AIR || wantToLink2 == Blocks.AIR) //cannot find or haven't registered yet.
                     NEED_TO_LINK.add(linkable);
                 else
@@ -89,7 +89,7 @@ public class RegistrationLink {
                 this.field.setAccessible(true);
             try {
                 if (Item.class.isAssignableFrom(this.field.getType()))
-                    RegistrationManager.register(Registries.ITEM, target.get(0), (Item) obj);
+                    RegistrationManager.register(Registry.ITEM, target.get(0), (Item) obj);
                 this.field.set(null, obj);
             } catch (IllegalAccessException e) {
                 AnnotationLib.LOGGER.error("Fail to set object: " + field.getName(), e);

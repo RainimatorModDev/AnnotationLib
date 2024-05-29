@@ -16,14 +16,12 @@ import net.minecraft.enchantment.Enchantment;
 import net.minecraft.entity.EntityType;
 import net.minecraft.entity.effect.StatusEffect;
 import net.minecraft.item.Item;
-import net.minecraft.item.ItemGroup;
 import net.minecraft.item.ItemStack;
 import net.minecraft.particle.DefaultParticleType;
 import net.minecraft.potion.Potion;
-import net.minecraft.registry.Registries;
-import net.minecraft.registry.Registry;
 import net.minecraft.sound.SoundEvent;
 import net.minecraft.util.Identifier;
+import net.minecraft.util.registry.Registry;
 
 import java.lang.reflect.Field;
 import java.lang.reflect.Modifier;
@@ -52,37 +50,34 @@ public class RegistrationManager implements IAnnotationProcessor {
             String name = getName(field, autoRegister);
             if (name != null) {
                 boolean registered = false;
-                try {//Item, Block, EntityType, SoundEvent, StatusEffect, ItemGroup, ParticleType, Enchantment, Potion, KeyBinding, BlockEntityType
+                try {//Item, Block, EntityType, SoundEvent, StatusEffect, ParticleType, Enchantment, Potion, KeyBinding, BlockEntityType
                     Object obj = field.get(null);
                     if (Item.class.isAssignableFrom(field.getType())) {
                         linkableChanged = true;
-                        register(Registries.ITEM, modId, name, (Item) obj);
+                        register(Registry.ITEM, modId, name, (Item) obj);
                         registered = true;
                     } else if (Block.class.isAssignableFrom(field.getType())) {
                         linkableChanged = true;
-                        register(Registries.BLOCK, modId, name, (Block) obj);
+                        register(Registry.BLOCK, modId, name, (Block) obj);
                         registered = true;
                     } else if (EntityType.class.isAssignableFrom(field.getType())) {
-                        register(Registries.ENTITY_TYPE, modId, name, (EntityType<?>) obj);
+                        register(Registry.ENTITY_TYPE, modId, name, (EntityType<?>) obj);
                         RegistrationHelper.processEntity(clazz, field, obj);
                         registered = true;
                     } else if (SoundEvent.class.isAssignableFrom(field.getType())) {
-                        register(Registries.SOUND_EVENT, modId, name, (SoundEvent) obj);
+                        register(Registry.SOUND_EVENT, modId, name, (SoundEvent) obj);
                         registered = true;
                     } else if (StatusEffect.class.isAssignableFrom(field.getType())) {
-                        register(Registries.STATUS_EFFECT, modId, name, (StatusEffect) obj);
-                        registered = true;
-                    } else if (ItemGroup.class.isAssignableFrom(field.getType())) {
-                        register(Registries.ITEM_GROUP, modId, name, (ItemGroup) obj);
+                        register(Registry.STATUS_EFFECT, modId, name, (StatusEffect) obj);
                         registered = true;
                     } else if (Enchantment.class.isAssignableFrom(field.getType())) {
-                        register(Registries.ENCHANTMENT, modId, name, (Enchantment) obj);
+                        register(Registry.ENCHANTMENT, modId, name, (Enchantment) obj);
                         registered = true;
                     } else if (Potion.class.isAssignableFrom(field.getType())) {
-                        register(Registries.POTION, modId, name, (Potion) obj);
+                        register(Registry.POTION, modId, name, (Potion) obj);
                         registered = true;
                     } else if (BlockEntityType.class.isAssignableFrom(field.getType())) {
-                        register(Registries.BLOCK_ENTITY_TYPE, modId, name, (BlockEntityType<?>) obj);
+                        register(Registry.BLOCK_ENTITY_TYPE, modId, name, (BlockEntityType<?>) obj);
                         registered = true;
                     } else if (EntryPointLoader.isClientSide) {
                         if (KeyBinding.class.isAssignableFrom(field.getType())) {
@@ -103,7 +98,7 @@ public class RegistrationManager implements IAnnotationProcessor {
                     ItemReg itemReg = field.getAnnotation(ItemReg.class);
                     if (itemReg != null) {
                         name = itemReg.value().isBlank() ? field.getName() : itemReg.value();
-                        register(Registries.ITEM, modId, name.toLowerCase(), (Item) obj);
+                        register(Registry.ITEM, modId, name.toLowerCase(), (Item) obj);
                         if (!itemReg.group().value().isBlank()) {
                             TargetId targetId = itemReg.group();
                             RegistrationGroup.add(new Identifier(targetId.namespace().isBlank() ? modId : targetId.namespace(), targetId.value()), field);
@@ -115,7 +110,7 @@ public class RegistrationManager implements IAnnotationProcessor {
                             if (!particleReg.name().isBlank())
                                 name = particleReg.name();
                             if (name == null) name = field.getName().toLowerCase();
-                            register(Registries.PARTICLE_TYPE, modId, name, (DefaultParticleType) obj);
+                            register(Registry.PARTICLE_TYPE, modId, name, (DefaultParticleType) obj);
                             if (EntryPointLoader.isClientSide) {
                                 Class<?> particleClass = particleReg.value();
                                 RegistrationHelper.processParticle(particleClass, obj);

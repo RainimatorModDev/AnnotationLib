@@ -13,7 +13,7 @@ import com.mojang.brigadier.builder.ArgumentBuilder;
 import com.mojang.brigadier.builder.LiteralArgumentBuilder;
 import com.mojang.brigadier.builder.RequiredArgumentBuilder;
 import com.mojang.brigadier.context.CommandContext;
-import net.fabricmc.fabric.api.command.v2.CommandRegistrationCallback;
+import net.fabricmc.fabric.api.command.v1.CommandRegistrationCallback;
 import net.minecraft.server.command.CommandManager;
 import net.minecraft.server.command.ServerCommandSource;
 
@@ -29,7 +29,7 @@ public class CommandRegistration implements IAnnotationProcessor {
         if (main == null) return;
         if (main.type() != CommandArgumentType.LITERAL)
             throw new IllegalArgumentException("Root command must be literal");
-        CommandRegistrationCallback.EVENT.register(((dispatcher, registryAccess, environment) -> dispatcher.register((LiteralArgumentBuilder<ServerCommandSource>) subRegister(CommandManager.literal(main.value()), clazz, environment))));
+        CommandRegistrationCallback.EVENT.register(((dispatcher, registryAccess) -> dispatcher.register((LiteralArgumentBuilder<ServerCommandSource>) subRegister(CommandManager.literal(main.value()), clazz))));
     }
 
     private static int tryToInvoke(Method method, CommandContext<ServerCommandSource> context) {
@@ -40,7 +40,7 @@ public class CommandRegistration implements IAnnotationProcessor {
         }
     }
 
-    private static <T extends ArgumentBuilder<ServerCommandSource, T>> ArgumentBuilder<ServerCommandSource, T> subRegister(ArgumentBuilder<ServerCommandSource, T> builder, Class<?> clazz, CommandManager.RegistrationEnvironment environment) {
+    private static <T extends ArgumentBuilder<ServerCommandSource, T>> ArgumentBuilder<ServerCommandSource, T> subRegister(ArgumentBuilder<ServerCommandSource, T> builder, Class<?> clazz) {
         for (Method method : clazz.getMethods()) {
             if (!Modifier.isStatic(method.getModifiers())) continue;
             CommandProcessor processor = method.getAnnotation(CommandProcessor.class);
@@ -77,9 +77,9 @@ public class CommandRegistration implements IAnnotationProcessor {
             if (permission != null)
                 builder.requires(source -> source.hasPermissionLevel(permission.value()));
             if (processor.type() == CommandArgumentType.LITERAL)
-                builder.then(subRegister(CommandManager.literal(processor.value()), c, environment));
+                builder.then(subRegister(CommandManager.literal(processor.value()), c));
             else
-                builder.then(subRegister(processor.type().getArgumentBuilder(processor.value()), c, environment));
+                builder.then(subRegister(processor.type().getArgumentBuilder(processor.value()), c));
         }
         return builder;
     }

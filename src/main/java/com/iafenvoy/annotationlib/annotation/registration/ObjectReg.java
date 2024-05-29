@@ -1,8 +1,7 @@
 package com.iafenvoy.annotationlib.annotation.registration;
 
-import net.minecraft.registry.Registry;
-
 import java.lang.annotation.*;
+import net.minecraft.util.registry.Registry;
 
 /**
  * <p>Register this field with given ID.</p>

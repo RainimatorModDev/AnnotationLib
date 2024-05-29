@@ -14,6 +14,7 @@ import com.iafenvoy.annotationlib.util.TargetType;
 import net.fabricmc.fabric.api.item.v1.FabricItemSettings;
 import net.minecraft.block.AbstractBlock;
 import net.minecraft.block.Block;
+import net.minecraft.block.Blocks;
 import net.minecraft.entity.EntityType;
 import net.minecraft.entity.SpawnGroup;
 import net.minecraft.item.Item;
@@ -28,7 +29,7 @@ public class TestRegistry implements IAnnotatedRegistryEntry {
     public static final Item TEST_ITEM = new Item(new FabricItemSettings());
     //Success
     @ObjectReg
-    public static final Block TEST_BLOCK = new Block(AbstractBlock.Settings.create());
+    public static final Block TEST_BLOCK = new Block(AbstractBlock.Settings.copy(Blocks.DIRT));
     //Success
     @ObjectReg
     public static final EntityType<MyEntity> TEST_ENTITY_TYPE = EntityHelper.build(MyEntity::new, SpawnGroup.MONSTER, 64, 3, true, 0.6F, 1.8F);
