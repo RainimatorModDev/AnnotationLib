@@ -6,9 +6,11 @@ This is a library to provide some operations powered by annotations.
 
 Currently supported: `Registration`, `Network Handler`, `Command System`, `Config System`
 
+**NOTE: 1.20.1+ is the primary develop version. 1.17.1-1.19.2 only update with big change. 1.16.5- will not supported.**
+
 ## Maven?
 
-Not use until release. Please import it with `flatDir`.
+See wiki for installation
 
 ## How to use?
 
@@ -39,10 +41,6 @@ Or you can use `AnnotationApi.register(YourClass.class);`.
 You need to implement `IAnnotatedRegistryEntry`.
 
 [Example Code](https://github.com/IAFEnvoy/AnnotationLib/blob/main/src/main/java/com/iafenvoy/annotationlib/test/TestRegistry.java)
-
-**Notice: if you use `@Group` or `@ItemGroup` and use the `group` param, you should use `ItemGroupApi` manually.**
-
-[Example Code](https://github.com/RainimatorModDev/RainimatorMod/blob/master/src/main/java/com/rainimator/rainimatormod/registry/ModCreativeTabs.java)
 
 ### Network Handler
 
